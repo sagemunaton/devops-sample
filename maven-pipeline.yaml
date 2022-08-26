@@ -1,0 +1,38 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: maven-build
+  namespace: pipelines-tutorial
+spec:
+  workspaces:
+  - name: local-maven-repo
+  resources:
+  - name: app-git
+    type: git
+  tasks:
+  - name: build
+    taskRef:
+      name: maven-build
+    resources:
+      inputs:
+      - name: source
+        resource: app-git
+    params:
+    - name: GOALS
+      value: 
+        - -B
+        - clean
+        - verify
+        - -Djib.allowInsecureRegistries=$(params.INSECUREREGISTRY)
+        - -Djib.to.image=$(params.IMAGE)
+        - compile
+        - com.google.cloud.tools:jib-maven-plugin:build
+    workspaces:
+    - name: maven-repo
+      workspace: local-maven-repo
+  params:
+    - name: INSECUREREGISTRY
+      default: "true"
+      type: string
+    - name: IMAGE
+      type: string

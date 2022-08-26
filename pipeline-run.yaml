@@ -1,0 +1,24 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineRun
+metadata:
+  generateName: jhipster-run-
+  namespace: pipelines-tutorial
+spec:
+  pipelineRef:
+    name: maven-build
+  resources:
+  - name: app-git
+    resourceSpec:
+      type: git
+      params:
+        - name: url
+          value: https://github.com/sagemunaton/helloworld.git
+        - name: revision
+          value: main
+  workspaces:
+  - name: local-maven-repo
+    persistentVolumeClaim:
+      claimName: maven-repo-pvc
+  params:
+    - name: IMAGE
+      value: quay.io/bwelch/helloworld
