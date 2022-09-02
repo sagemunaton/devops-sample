@@ -1,19 +1,17 @@
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1alpha1
 kind: Task
 metadata:
-  name: maven-build
+  name: maven-task
 spec:
-  workspaces:
-  - name: maven-repo
-  inputs:
-    params:
+  params:
     - name: GOALS
       description: The Maven goals to run
       type: array
       default: ["clean"]
-    resources:
-    - name: source
-      type: git
+  resources:
+    inputs:
+      - name: source
+        type: git
   steps:
     - name: mvn
       image: gcr.io/cloud-builders/mvn
@@ -22,3 +20,6 @@ spec:
       args:
         - -Dmaven.repo.local=$(workspaces.maven-repo.path)
         - "$(inputs.params.GOALS)"
+  workspaces:
+  - name: maven-repo
+

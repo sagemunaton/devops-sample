@@ -1,0 +1,43 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: vantage-pipeline-trigger-template
+spec:
+  params:
+    - name: git-revision
+    - name: gitrepo-url
+    - name: git-repo-name
+    - name: pusher-name
+    - name: microServiceName
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        annotations: {}
+        generateName: vantage-jib-pipeline-
+        labels:
+          app.kubernetes.io/instance: vantage-pipelins
+          tekton.dev/pipeline: vantage-pipeline
+        namespace: vantage-devops
+      spec:
+        params:
+          - name: INSECUREREGISTRY
+            value: 'false'
+          - value: quay.io/bwelch/$(tt.params.microServiceName)
+          - name: rev
+            value: $(tt.params.git-revision)
+      pipelineRef:
+        name: vantage-pipeline
+      resources:
+        - name: microService-git
+          resourceSpec:
+            type: git
+            params:
+              - name: url
+                value: 'https://treebones@bitbucket.org/treebones/$(tt.params.microServiceName).git'
+              - name: revision
+                value: main
+      workspaces:
+        - name: local-maven-repo
+          persistentVolumeClaim:
+            claimName: maven-repo-pvc

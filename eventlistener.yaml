@@ -1,0 +1,23 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: member-eventlistener
+spec:
+  serviceAccountName: pipeline
+  triggers:
+    - bindings:
+        - kind: TriggerBinding
+          ref: vantage-pipeline-trigger-binding
+      interceptors:
+        - params:
+            - name: secretRef
+              value: null
+            - name: eventTypes
+              value:
+                - 'repo:refs_changed'
+          ref:
+            kind: ClusterInterceptor
+            name: bitbucket
+      name: bitbucket-triggers
+      template:
+        ref: vantage-pipeline-trigger-template
