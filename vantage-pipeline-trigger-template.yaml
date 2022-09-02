@@ -20,14 +20,8 @@ spec:
           tekton.dev/pipeline: vantage-pipeline
         namespace: vantage-devops
       spec:
-        params:
-          - name: INSECUREREGISTRY
-            value: 'false'
-          - value: quay.io/bwelch/$(tt.params.microServiceName)
-          - name: rev
-            value: $(tt.params.git-revision)
       pipelineRef:
-        name: vantage-pipeline
+        name: maven-build
       resources:
         - name: microService-git
           resourceSpec:
@@ -37,7 +31,3 @@ spec:
                 value: 'https://treebones@bitbucket.org/treebones/$(tt.params.microServiceName).git'
               - name: revision
                 value: main
-      workspaces:
-        - name: local-maven-repo
-          persistentVolumeClaim:
-            claimName: maven-repo-pvc

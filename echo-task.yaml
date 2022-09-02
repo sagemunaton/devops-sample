@@ -13,4 +13,4 @@ spec:
       workingDir: /workspace/source
       command: ["/usr/bin/echo"]
       args:
-        - "$$(inputs.params.body)"
+        - "$(inputs.params.body)"

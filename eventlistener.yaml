@@ -8,6 +8,8 @@ spec:
     - bindings:
         - kind: TriggerBinding
           ref: vantage-pipeline-trigger-binding
+        - name: body
+          value: $(extensions.body)
       interceptors:
         - params:
             - name: secretRef
