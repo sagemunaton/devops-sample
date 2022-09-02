@@ -11,6 +11,6 @@ spec:
     - name: mvn
       image: gcr.io/cloud-builders/mvn
       workingDir: /workspace/source
-      command: ["/usr/bin/mvn"]
+      command: ["/usr/bin/echo"]
       args:
-        - "echo $$(inputs.params.body)"
+        - "$$(inputs.params.body)"
