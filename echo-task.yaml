@@ -14,6 +14,3 @@ spec:
       command: ["/usr/bin/mvn"]
       args:
         - "echo $$(inputs.params.body)"
-  workspaces:
-  - name: maven-repo
-
