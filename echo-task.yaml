@@ -1,0 +1,19 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: echo-task
+spec:
+  params:
+    - name: body
+      description: request body i think
+      type: string
+  steps:
+    - name: mvn
+      image: gcr.io/cloud-builders/mvn
+      workingDir: /workspace/source
+      command: ["/usr/bin/mvn"]
+      args:
+        - "echo $$(inputs.params.body)"
+  workspaces:
+  - name: maven-repo
+
